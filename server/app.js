@@ -4,11 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var groups = require('./routes/groups');
-
+var auth = require('./routes/auth');
 var app = express();
 
 
@@ -20,10 +22,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', routes);
 app.use('/api/users', users);
 app.use('/api/groups', groups);
-
+app.use('/auth/', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,6 +59,21 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+
+/// MONGOOOSE Database Linking ****
+
+var mongoose = require('mongoose');
+
+var connectDBLink = "mongodb://localhost/inde";
+
+
+mongoose.connect(connectDBLink);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(callback) {
+  console.log("DB opened");
 });
 
 
