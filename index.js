@@ -22,6 +22,7 @@ app.use(passport.session());
 app.use("/public", express.static(__dirname + '/public'));
 app.use("/client/build", express.static(__dirname + '/client/build'));
 
+
 app.listen(config.PORT || 3000);
 
 
@@ -32,13 +33,31 @@ app.listen(config.PORT || 3000);
 app.get("/", function (req, res) {
 	console.log('/ GET');
 	if (!req.user) {
-		res.render('landingPage');
+		res.render('landingPage', {layout: "../layouts/main"});
 	} else {
 		res.render('index');
 	}
 });
 
+app.get("/projects", function (req, res) {
+	res.render('projects');
+});
 
+app.get("/people", function (req, res) {
+	res.render("people");
+});
+
+app.get("/philosophy", function (req, res) {
+	res.render("philosophy");
+});
+
+app.get("/freelance", function (req, res) {
+	res.render("freelance");
+});
+
+app.get("/login", function (req, res) {
+	res.render('login');
+});
 
 //***************
 
@@ -48,15 +67,8 @@ app.get("/", function (req, res) {
 
 var mongoose = require('mongoose');
 
-var connectDBLink;
+var connectDBLink = "mongodb://localhost/inde";
 
-if (config.NODE_ENV == "production") {
-  connectDBLink = config.MONGO_DB;
-} else if (config.NODE_ENV == "development") {
-	connectDBLink = config.MONGO_DB;
-} else {
-	connectDBLink = config.MONGO_DB;
-}
 
 mongoose.connect(connectDBLink);
 var db = mongoose.connection;
