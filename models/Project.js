@@ -4,6 +4,7 @@ var projectSchema = new mongoose.Schema({
   title: String,
   description: String,
   contentPiece: String,
+  coverPhotoURL: String,
   pictureURLS: [String],
   author_fullName: String,
   author_id: mongoose.Schema.Types.ObjectId,
